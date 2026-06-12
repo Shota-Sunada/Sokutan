@@ -11,3 +11,12 @@ export type AudioSource = {
 }
 
 export type RepeatMode = "off" | "one" | "all" | "custom"
+
+export type TrackInfo = {
+  bookId: number
+  audioId: number
+  trackNo: number
+  bookName: string
+  audioName: string
+  trackName: string
+}

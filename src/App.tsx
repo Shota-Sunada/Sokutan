@@ -3,7 +3,7 @@ import "react-h5-audio-player/lib/styles.css";
 import './App.css'
 import { books } from './core/books';
 import AudioPlayer from "react-h5-audio-player";
-import type { RepeatMode } from './core/types';
+import type { RepeatMode, TrackInfo } from './core/types';
 
 function App() {
   const [bookId, setBookId] = useState(0);
@@ -14,6 +14,10 @@ function App() {
     localStorage.getItem("repeatMode") as RepeatMode || "off");
   const [skipSeconds, setSkipSeconds] = useState(
     Number(localStorage.getItem("skipSeconds") || "3"));
+  const [history, setHistory] = useState(() => {
+    const stored = localStorage.getItem("history");
+    return stored ? JSON.parse(stored) as TrackInfo[] : [];
+  });
 
   const audioRef = useRef<AudioPlayer>(null);
   const inputRangeRef = useRef<HTMLInputElement>(null);
@@ -140,6 +144,31 @@ function App() {
     };
   }, [bookId, audioId, trackNo]);
 
+  //履歴、最新10件
+  useEffect(() => {
+    if (trackNo === 0) return;
+    const lastEntry = history[0];
+    if (lastEntry && lastEntry.bookId === bookId && lastEntry.audioId === audioId && lastEntry.trackNo === trackNo) {
+      return;
+    }
+
+    const newEntry: TrackInfo = {
+      bookId,
+      audioId,
+      trackNo,
+      bookName: book.title,
+      audioName: book.audios[audioId].name,
+      trackName: `${trackNo}.${book.sections[trackNo - 1]}`
+    };
+
+    setHistory((prev) => {
+      const updated = [newEntry, ...prev];
+      const filtered = updated.slice(0, 10);
+      localStorage.setItem("history", JSON.stringify(filtered));
+      return filtered;
+    });
+  }, [bookId, audioId, trackNo]);
+
   return (
     <div className="flex flex-col items-center justify-center">
       <p className="text-3xl mb-4">速単音声プレイヤー</p>
@@ -211,7 +240,7 @@ function App() {
           onEnded={handleEnded}
         />
       </div>
-      <div className="text-lg mb-5 flex items-center">
+      <div className="text-lg mb-2 flex items-center">
         <button className="mr-3" onClick={() => moveTrack(-1)}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="#868686">
             <polygon points="11,3 3,12 11,21" />
@@ -237,6 +266,21 @@ function App() {
           </svg>
         </button>
       </div>
+      <label className="text-lg mb-4 flex items-center space-x-2">
+        <span>スキップする秒数:</span>
+        <input
+          type="number"
+          min="1"
+          value={skipSeconds}
+          onChange={(e) => {
+            const seconds = Number(e.target.value);
+            setSkipSeconds(seconds);
+            localStorage.setItem("skipSeconds", `${seconds}`);
+          }}
+          className="border border-gray-300 rounded px-2 py-1 w-16"
+        />
+        秒
+      </label>
       <p className="text-lg mb-2">
         再生速度:
         <label>
@@ -332,27 +376,22 @@ function App() {
           />
         </label>
       </>)}
-      <details className="group mt-6 w-[60%] max-w-lg rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm backdrop-blur-sm">
+      <details className="group text-lg mt-6 w-[60%] max-w-lg rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm backdrop-blur-sm">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-lg font-medium text-slate-700">
-          <span>詳細オプション</span>
+          <span>履歴</span>
           <span className="text-sm text-slate-500 transition-transform group-open:rotate-180">Ⅴ</span>
         </summary>
-        <div className="mt-4 grid gap-3 text-sm text-slate-600 sm:grid-cols-2">
-          <label className="flex items-center space-x-2">
-            <span>スキップの秒数:</span>
-            <input
-              type="number"
-              min="1"
-              value={skipSeconds}
-              onChange={(e) => {
-                const seconds = Number(e.target.value);
-                setSkipSeconds(seconds);
-                localStorage.setItem("skipSeconds", `${seconds}`);
-              }}
-              className="border border-gray-300 rounded px-2 py-1 w-16"
-            />
-              秒
-          </label>
+        <div className="mt-4 flex flex-col items-center gap-3 text-slate-600">
+          {history.map((track, index) => (
+            <div key={index} onClick={() => {
+              setBookId(track.bookId);
+              setAudioId(track.audioId);
+              setTrackNo(track.trackNo);
+            }} className="w-full cursor-pointer rounded-md border border-slate-300 bg-slate-120/100 px-3 py-2 hover:bg-slate-200">
+              <p className="text-sm text-slate-500">{track.bookName} - {track.audioName}</p>
+              {track.trackName}
+            </div>
+          ))}
         </div>
       </details>
     </div>
