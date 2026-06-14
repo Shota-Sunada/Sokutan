@@ -1,3 +1,15 @@
+body {
+  overflow-y: scroll;
+  min-height: 100%;
+}
+
+button,
+input,
+select {
+  border: 1px solid oklch(87.2% 0.01 258.338);
+  border-radius: 0.25rem;
+}
+
 .counter {
   font-size: 16px;
   padding: 5px 10px;

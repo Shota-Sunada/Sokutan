@@ -174,7 +174,7 @@ function App() {
       <label className="text-lg mb-4">
         <span className="mr-2">教材を選択:</span>
         <select
-          className="border border-gray-300 rounded px-2 py-1"
+          className="px-2 py-1"
           value={bookId}
           onChange={(e) => {
             setBookId(Number(e.target.value));
@@ -191,7 +191,7 @@ function App() {
       </label>
       <label className="text-lg mb-4">
         <span className="mr-2">音声のタイプを選択:</span>
-        <select className="border border-gray-300 rounded px-2 py-1" value={audioId} onChange={(e) => setAudioId(Number(e.target.value))}>
+        <select className="px-2 py-1" value={audioId} onChange={(e) => setAudioId(Number(e.target.value))}>
           {book.audios.map((audio, index) => (
             <option key={audio.name} value={index}>
               {audio.name}
@@ -199,12 +199,13 @@ function App() {
           ))}
         </select>
       </label>
-      {trackNo === 0 && (
+      {/* a lot of thanks for @tau34 */}
+      {/* {trackNo === 0 && (
         <>
           <p className="text-lg mb-4">トラック番号を選択:</p>
           <div className="grid grid-cols-6 gap-2 mb-4">
             {Array.from({ length: book.sections.length }, (_, i) => (
-              <button key={i} className={`border border-gray-300 rounded px-4 py-1`} onClick={() => setTrackNo(i + 1)}>
+              <button key={i} className={` px-4 py-1`} onClick={() => setTrackNo(i + 1)}>
                 {i + 1}
               </button>
             ))}
@@ -216,11 +217,14 @@ function App() {
           <p className="text-lg mb-4">
             {trackNo}.{book.sections[trackNo - 1]}
           </p>
-          <button className="mb-4 border border-gray-300 rounded px-4 py-1" onClick={() => setTrackNo(0)}>
+          <button className="mb-4  px-4 py-1" onClick={() => setTrackNo(0)}>
             トラック番号選択に戻る
           </button>
         </>
-      )}
+      )} */}
+      <div>
+        <button></button>
+      </div>
       <div className="w-[80%] mb-6">
         <AudioPlayer src={`${book.audios[audioId].url}${trackNo.toString().padStart(2, '0')}.mp3`} showJumpControls={false} ref={audioRef} onEnded={handleEnded} />
       </div>
@@ -231,10 +235,10 @@ function App() {
             <polygon points="21,3 13,12 21,21" />
           </svg>
         </button>
-        <button className="mr-3 border border-gray-300 rounded px-4 py-1 mx-1" onClick={() => skipTime(-skipSeconds)}>
+        <button className="mr-3 px-4 py-1 mx-1" onClick={() => skipTime(-skipSeconds)}>
           -{skipSeconds}s
         </button>
-        <button className="border border-gray-300 rounded px-4 py-1 mx-1" onClick={() => skipTime(skipSeconds)}>
+        <button className="px-4 py-1 mx-1" onClick={() => skipTime(skipSeconds)}>
           +{skipSeconds}s
         </button>
         <button className="ml-3" onClick={() => moveTrack(1)}>
@@ -255,7 +259,7 @@ function App() {
             setSkipSeconds(seconds);
             localStorage.setItem('skipSeconds', `${seconds}`);
           }}
-          className="border border-gray-300 rounded px-2 py-1 w-16"
+          className="px-2 py-1 w-16"
         />
         秒
       </label>
@@ -291,7 +295,7 @@ function App() {
       />
       <div className="flex items-center mt-4 mb-4">
         {[0.8, 1, 1.2, 1.5].map((rate) => (
-          <button key={rate} className={`border border-gray-300 rounded px-4 py-1 mx-1 ${playbackRate === rate ? 'bg-gray-300' : ''}`} onClick={() => updateRate(rate)}>
+          <button key={rate} className={`px-4 py-1 mx-1 ${playbackRate === rate ? 'bg-gray-300' : ''}`} onClick={() => updateRate(rate)}>
             {rate}x
           </button>
         ))}
@@ -299,7 +303,7 @@ function App() {
       <label className="text-lg mb-2">
         <span className="mr-2">リピート:</span>
         <select
-          className="border border-gray-300 rounded px-2 py-1"
+          className="px-2 py-1"
           value={repeatMode}
           onChange={(e) => {
             setRepeatMode(e.target.value as RepeatMode);
@@ -329,7 +333,7 @@ function App() {
                   localStorage.setItem('customRepeatEnd', `${newStart}`);
                 }
               }}
-              className="border border-gray-300 rounded px-2 py-1 w-16"
+              className="px-2 py-1 w-16"
             />
             <span className="ml-2 mr-2">終了:</span>
             <input
@@ -346,7 +350,7 @@ function App() {
                   localStorage.setItem('customRepeatStart', `${newEnd}`);
                 }
               }}
-              className="border border-gray-300 rounded px-2 py-1 w-16"
+              className="px-2 py-1 w-16"
             />
           </label>
         </>
