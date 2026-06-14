@@ -258,7 +258,7 @@ function App() {
           )}
         </div>
         <div className="mx-1">
-          <a href="https://github.com/Shota-Sunada/Sokutan/wiki" target="_blank" referrerPolicy="no-referrer">
+          <a href="https://github.com/Shota-Sunada/Sokutan/wiki/ヘルプページ" target="_blank" referrerPolicy="no-referrer">
             <button className="flex flex-row items-center">
               <span className="mr-2">ヘルプ</span>
               <FaExternalLinkAlt />
