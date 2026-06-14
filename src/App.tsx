@@ -131,23 +131,23 @@ function App() {
   }, [playbackRate, trackNo]);
 
   //シーク操作による一時停止防ぐ
-  useEffect(() => {
-    const audio = audioRef.current?.audio.current;
-    if (!audio) return;
+  // useEffect(() => {
+  //   const audio = audioRef.current?.audio.current;
+  //   if (!audio) return;
 
-    function handleSeeked() {
-      // シーク直後に停止している場合は再生を試みる
-      if (audio && audio.paused) {
-        audio.play().catch(() => {});
-      }
-    }
+  //   function handleSeeked() {
+  //     // シーク直後に停止している場合は再生を試みる
+  //     if (audio && audio.paused) {
+  //       audio.play().catch(() => {});
+  //     }
+  //   }
 
-    audio.addEventListener('seeked', handleSeeked);
+  //   audio.addEventListener('seeked', handleSeeked);
 
-    return () => {
-      audio.removeEventListener('seeked', handleSeeked);
-    };
-  }, [bookId, audioId, trackNo]);
+  //   return () => {
+  //     audio.removeEventListener('seeked', handleSeeked);
+  //   };
+  // }, [bookId, audioId, trackNo]);
 
   //履歴、最新10件
   useEffect(() => {
