@@ -24,9 +24,9 @@ function App() {
   const book = books[bookId];
 
   const crs = Number(localStorage.getItem("customRepeatStart") || "1");
-  const cre = Number(localStorage.getItem("customRepeatEnd") || `${book.number}`);
+  const cre = Number(localStorage.getItem("customRepeatEnd") || `${book.sections.length}`);
   function clamp(x: number) {
-    return Math.min(Math.max(x, 1), book.number);
+    return Math.min(Math.max(x, 1), book.sections.length);
   }
 
   const [customRepeatStart, setCustomRepeatStart] = useState(clamp(crs));
@@ -49,11 +49,11 @@ function App() {
     const newTrackNo = trackNo + offset;
     if (newTrackNo < 1) {
       //+1or-1しか想定していない
-      setTrackNo(newTrackNo + book.number);
+      setTrackNo(newTrackNo + book.sections.length);
       return;
     }
-    if (newTrackNo > book.number) {
-      setTrackNo(newTrackNo - book.number);
+    if (newTrackNo > book.sections.length) {
+      setTrackNo(newTrackNo - book.sections.length);
       return;
     }
     setTrackNo(newTrackNo);
@@ -211,7 +211,7 @@ function App() {
       {trackNo === 0 && <>
         <p className="text-lg mb-4">トラック番号を選択:</p>
         <div className="grid grid-cols-6 gap-2 mb-4">
-          {Array.from({ length: book.number }, (_, i) => (
+          {Array.from({ length: book.sections.length }, (_, i) => (
             <button
               key={i}
               className={`border border-gray-300 rounded px-4 py-1`}
@@ -345,7 +345,7 @@ function App() {
           <input
             type="number"
             min="1"
-            max={book.number}
+            max={book.sections.length}
             value={customRepeatStart}
             onChange={(e) => {
               const newStart = Number(e.target.value);
@@ -362,7 +362,7 @@ function App() {
           <input
             type="number"
             min="1"
-            max={book.number}
+            max={book.sections.length}
             value={customRepeatEnd}
             onChange={(e) => {
               const newEnd = Number(e.target.value);

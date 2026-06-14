@@ -3,7 +3,6 @@ import type { Book } from "./types";
 export const books: Book[] = [
   {
     title: "速読英単語 必修編 改訂第8版",
-    number: 71,
     sections: [
       "お茶の木の種類",
       "オオカミの子育て",
@@ -106,7 +105,6 @@ export const books: Book[] = [
   },
   {
     title: "速読英単語 上級編 改訂第5版",
-    number: 48,
     sections: [
       "人間と動物の違い",
       "蝶が互いを見分ける方法（1）",
