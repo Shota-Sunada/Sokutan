@@ -123,7 +123,7 @@ function App() {
     if (audioRef.current && trackNo > 0) {
       audioRef.current.audio.current.playbackRate = playbackRate;
     }
-  }, [trackNo]);
+  }, [playbackRate, trackNo]);
 
   //シーク操作による一時停止防ぐ
   useEffect(() => {
@@ -161,13 +161,14 @@ function App() {
       trackName: `${trackNo}.${book.sections[trackNo - 1]}`
     };
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setHistory((prev) => {
       const updated = [newEntry, ...prev];
       const filtered = updated.slice(0, 10);
       localStorage.setItem("history", JSON.stringify(filtered));
       return filtered;
     });
-  }, [bookId, audioId, trackNo]);
+  }, [bookId, audioId, trackNo, history, book.title, book.audios, book.sections]);
 
   return (
     <div className="flex flex-col items-center justify-center">
