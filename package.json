@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "format": "prettier ."
+    "format": "prettier . --write"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.0",
