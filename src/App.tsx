@@ -210,7 +210,7 @@ function App() {
       </label>
       {trackNo === 0 && <>
         <p className="text-lg mb-4">トラック番号を選択:</p>
-        <div className="grid grid-cols-5 gap-2 mb-4">
+        <div className="grid grid-cols-6 gap-2 mb-4">
           {Array.from({ length: book.number }, (_, i) => (
             <button
               key={i}
