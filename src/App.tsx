@@ -350,7 +350,6 @@ function App() {
               <option value="one">これを繰り返す</option>
               <option value="all">全て再生</option>
               <option value="custom">範囲指定</option>
-              <option value="kikinagashi">聞き流し</option>
             </select>
           </label>
           <>
