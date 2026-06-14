@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from 'react'
-import "react-h5-audio-player/lib/styles.css";
-import './App.css'
+import { useState, useRef, useEffect } from 'react';
+import 'react-h5-audio-player/lib/styles.css';
+import './App.css';
 import { books } from './core/books';
-import AudioPlayer from "react-h5-audio-player";
+import AudioPlayer from 'react-h5-audio-player';
 import type { RepeatMode, TrackInfo } from './core/types';
 
 function App() {
@@ -10,21 +10,19 @@ function App() {
   const [audioId, setAudioId] = useState(0);
   const [trackNo, setTrackNo] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
-  const [repeatMode, setRepeatMode] = useState<RepeatMode>(
-    localStorage.getItem("repeatMode") as RepeatMode || "off");
-  const [skipSeconds, setSkipSeconds] = useState(
-    Number(localStorage.getItem("skipSeconds") || "3"));
+  const [repeatMode, setRepeatMode] = useState<RepeatMode>((localStorage.getItem('repeatMode') as RepeatMode) || 'off');
+  const [skipSeconds, setSkipSeconds] = useState(Number(localStorage.getItem('skipSeconds') || '3'));
   const [history, setHistory] = useState(() => {
-    const stored = localStorage.getItem("history");
-    return stored ? JSON.parse(stored) as TrackInfo[] : [];
+    const stored = localStorage.getItem('history');
+    return stored ? (JSON.parse(stored) as TrackInfo[]) : [];
   });
 
   const audioRef = useRef<AudioPlayer>(null);
   const inputRangeRef = useRef<HTMLInputElement>(null);
   const book = books[bookId];
 
-  const crs = Number(localStorage.getItem("customRepeatStart") || "1");
-  const cre = Number(localStorage.getItem("customRepeatEnd") || `${book.sections.length}`);
+  const crs = Number(localStorage.getItem('customRepeatStart') || '1');
+  const cre = Number(localStorage.getItem('customRepeatEnd') || `${book.sections.length}`);
   function clamp(x: number) {
     return Math.min(Math.max(x, 1), book.sections.length);
   }
@@ -68,14 +66,14 @@ function App() {
 
   //リピートの実装
   function handleEnded() {
-    if (repeatMode === "one") {
+    if (repeatMode === 'one') {
       if (audioRef.current) {
         audioRef.current.audio.current.currentTime = 0;
         audioRef.current.audio.current.play();
       }
-    } else if (repeatMode === "all") {
+    } else if (repeatMode === 'all') {
       moveTrack(1);
-    } else if (repeatMode === "custom") {
+    } else if (repeatMode === 'custom') {
       //所謂ABリピート
       if (trackNo < customRepeatStart || trackNo > customRepeatEnd) {
         setTrackNo(customRepeatStart);
@@ -102,10 +100,10 @@ function App() {
       inputRange.style.background = `linear-gradient(90deg, #868686 ${ratio}%, #dddddd ${ratio}%)`;
     }
 
-    inputRange?.addEventListener("input", updateRateBar);
+    inputRange?.addEventListener('input', updateRateBar);
 
     return () => {
-      inputRange?.removeEventListener("input", updateRateBar);
+      inputRange?.removeEventListener('input', updateRateBar);
     };
   }, []);
 
@@ -118,7 +116,7 @@ function App() {
 
     audio.playbackRate = playbackRate;
 
-    audio.play().catch(() => { });
+    audio.play().catch(() => {});
 
     if (audioRef.current && trackNo > 0) {
       audioRef.current.audio.current.playbackRate = playbackRate;
@@ -133,7 +131,7 @@ function App() {
     function handleSeeked() {
       // シーク直後に停止している場合は再生を試みる
       if (audio && audio.paused) {
-        audio.play().catch(() => { });
+        audio.play().catch(() => {});
       }
     }
 
@@ -165,7 +163,7 @@ function App() {
     setHistory((prev) => {
       const updated = [newEntry, ...prev];
       const filtered = updated.slice(0, 10);
-      localStorage.setItem("history", JSON.stringify(filtered));
+      localStorage.setItem('history', JSON.stringify(filtered));
       return filtered;
     });
   }, [bookId, audioId, trackNo, history, book.title, book.audios, book.sections]);
@@ -178,15 +176,12 @@ function App() {
         <select
           className="border border-gray-300 rounded px-2 py-1"
           value={bookId}
-          onChange={
-            (e) => {
-              setBookId(Number(e.target.value));
-              //一応音声と番号リセット
-              setAudioId(0);
-              setTrackNo(0);
-            }
-          }
-        >
+          onChange={(e) => {
+            setBookId(Number(e.target.value));
+            //一応音声と番号リセット
+            setAudioId(0);
+            setTrackNo(0);
+          }}>
           {books.map((book, index) => (
             <option key={book.title} value={index}>
               {book.title}
@@ -196,11 +191,7 @@ function App() {
       </label>
       <label className="text-lg mb-4">
         <span className="mr-2">音声のタイプを選択:</span>
-        <select
-          className="border border-gray-300 rounded px-2 py-1"
-          value={audioId}
-          onChange={(e) => setAudioId(Number(e.target.value))}
-        >
+        <select className="border border-gray-300 rounded px-2 py-1" value={audioId} onChange={(e) => setAudioId(Number(e.target.value))}>
           {book.audios.map((audio, index) => (
             <option key={audio.name} value={index}>
               {audio.name}
@@ -208,38 +199,30 @@ function App() {
           ))}
         </select>
       </label>
-      {trackNo === 0 && <>
-        <p className="text-lg mb-4">トラック番号を選択:</p>
-        <div className="grid grid-cols-6 gap-2 mb-4">
-          {Array.from({ length: book.sections.length }, (_, i) => (
-            <button
-              key={i}
-              className={`border border-gray-300 rounded px-4 py-1`}
-              onClick={() => setTrackNo(i + 1)}
-            >
-              {i + 1}
-            </button>
-          ))}
-        </div>
-      </>}
-      {trackNo > 0 && (<>
-        <p className="text-lg mb-4">
-          {trackNo}.{book.sections[trackNo - 1]}
-        </p>
-        <button
-          className="mb-4 border border-gray-300 rounded px-4 py-1"
-          onClick={() => setTrackNo(0)}
-        >
-          トラック番号選択に戻る
-        </button>
-      </>)}
+      {trackNo === 0 && (
+        <>
+          <p className="text-lg mb-4">トラック番号を選択:</p>
+          <div className="grid grid-cols-6 gap-2 mb-4">
+            {Array.from({ length: book.sections.length }, (_, i) => (
+              <button key={i} className={`border border-gray-300 rounded px-4 py-1`} onClick={() => setTrackNo(i + 1)}>
+                {i + 1}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+      {trackNo > 0 && (
+        <>
+          <p className="text-lg mb-4">
+            {trackNo}.{book.sections[trackNo - 1]}
+          </p>
+          <button className="mb-4 border border-gray-300 rounded px-4 py-1" onClick={() => setTrackNo(0)}>
+            トラック番号選択に戻る
+          </button>
+        </>
+      )}
       <div className="w-[80%] mb-6">
-        <AudioPlayer
-          src={`${book.audios[audioId].url}${trackNo.toString().padStart(2, '0')}.mp3`}
-          showJumpControls={false}
-          ref={audioRef}
-          onEnded={handleEnded}
-        />
+        <AudioPlayer src={`${book.audios[audioId].url}${trackNo.toString().padStart(2, '0')}.mp3`} showJumpControls={false} ref={audioRef} onEnded={handleEnded} />
       </div>
       <div className="text-lg mb-2 flex items-center">
         <button className="mr-3" onClick={() => moveTrack(-1)}>
@@ -248,16 +231,10 @@ function App() {
             <polygon points="21,3 13,12 21,21" />
           </svg>
         </button>
-        <button
-          className="mr-3 border border-gray-300 rounded px-4 py-1 mx-1"
-          onClick={() => skipTime(-skipSeconds)}
-        >
+        <button className="mr-3 border border-gray-300 rounded px-4 py-1 mx-1" onClick={() => skipTime(-skipSeconds)}>
           -{skipSeconds}s
         </button>
-        <button
-          className="border border-gray-300 rounded px-4 py-1 mx-1"
-          onClick={() => skipTime(skipSeconds)}
-        >
+        <button className="border border-gray-300 rounded px-4 py-1 mx-1" onClick={() => skipTime(skipSeconds)}>
           +{skipSeconds}s
         </button>
         <button className="ml-3" onClick={() => moveTrack(1)}>
@@ -276,7 +253,7 @@ function App() {
           onChange={(e) => {
             const seconds = Number(e.target.value);
             setSkipSeconds(seconds);
-            localStorage.setItem("skipSeconds", `${seconds}`);
+            localStorage.setItem('skipSeconds', `${seconds}`);
           }}
           className="border border-gray-300 rounded px-2 py-1 w-16"
         />
@@ -314,11 +291,7 @@ function App() {
       />
       <div className="flex items-center mt-4 mb-4">
         {[0.8, 1, 1.2, 1.5].map((rate) => (
-          <button
-            key={rate}
-            className={`border border-gray-300 rounded px-4 py-1 mx-1 ${playbackRate === rate ? 'bg-gray-300' : ''}`}
-            onClick={() => updateRate(rate)}
-          >
+          <button key={rate} className={`border border-gray-300 rounded px-4 py-1 mx-1 ${playbackRate === rate ? 'bg-gray-300' : ''}`} onClick={() => updateRate(rate)}>
             {rate}x
           </button>
         ))}
@@ -330,53 +303,54 @@ function App() {
           value={repeatMode}
           onChange={(e) => {
             setRepeatMode(e.target.value as RepeatMode);
-            localStorage.setItem("repeatMode", e.target.value);
-          }}
-        >
+            localStorage.setItem('repeatMode', e.target.value);
+          }}>
           <option value="off">オフ</option>
           <option value="one">トラック</option>
           <option value="all">ALL</option>
           <option value="custom">カスタム</option>
         </select>
       </label>
-      {repeatMode === "custom" && (<>
-        <label className="text-lg mb-2">
-          <span className="mr-2">開始:</span>
-          <input
-            type="number"
-            min="1"
-            max={book.sections.length}
-            value={customRepeatStart}
-            onChange={(e) => {
-              const newStart = Number(e.target.value);
-              setCustomRepeatStart(newStart);
-              localStorage.setItem("customRepeatStart", `${newStart}`);
-              if (customRepeatEnd < newStart) {
-                setCustomRepeatEnd(newStart);
-                localStorage.setItem("customRepeatEnd", `${newStart}`);
-              }
-            }}
-            className="border border-gray-300 rounded px-2 py-1 w-16"
-          />
-          <span className="ml-2 mr-2">終了:</span>
-          <input
-            type="number"
-            min="1"
-            max={book.sections.length}
-            value={customRepeatEnd}
-            onChange={(e) => {
-              const newEnd = Number(e.target.value);
-              setCustomRepeatEnd(newEnd);
-              localStorage.setItem("customRepeatEnd", `${newEnd}`);
-              if (customRepeatStart > newEnd) {
-                setCustomRepeatStart(newEnd);
-                localStorage.setItem("customRepeatStart", `${newEnd}`);
-              }
-            }}
-            className="border border-gray-300 rounded px-2 py-1 w-16"
-          />
-        </label>
-      </>)}
+      {repeatMode === 'custom' && (
+        <>
+          <label className="text-lg mb-2">
+            <span className="mr-2">開始:</span>
+            <input
+              type="number"
+              min="1"
+              max={book.sections.length}
+              value={customRepeatStart}
+              onChange={(e) => {
+                const newStart = Number(e.target.value);
+                setCustomRepeatStart(newStart);
+                localStorage.setItem('customRepeatStart', `${newStart}`);
+                if (customRepeatEnd < newStart) {
+                  setCustomRepeatEnd(newStart);
+                  localStorage.setItem('customRepeatEnd', `${newStart}`);
+                }
+              }}
+              className="border border-gray-300 rounded px-2 py-1 w-16"
+            />
+            <span className="ml-2 mr-2">終了:</span>
+            <input
+              type="number"
+              min="1"
+              max={book.sections.length}
+              value={customRepeatEnd}
+              onChange={(e) => {
+                const newEnd = Number(e.target.value);
+                setCustomRepeatEnd(newEnd);
+                localStorage.setItem('customRepeatEnd', `${newEnd}`);
+                if (customRepeatStart > newEnd) {
+                  setCustomRepeatStart(newEnd);
+                  localStorage.setItem('customRepeatStart', `${newEnd}`);
+                }
+              }}
+              className="border border-gray-300 rounded px-2 py-1 w-16"
+            />
+          </label>
+        </>
+      )}
       <details className="group text-lg mt-6 w-[60%] max-w-lg rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm backdrop-blur-sm">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-lg font-medium text-slate-700">
           <span>履歴</span>
@@ -385,19 +359,24 @@ function App() {
         <div className="mt-4 flex flex-col items-center gap-3 text-slate-600">
           {history.length === 0 && <p className="text-sm text-slate-500">再生履歴はありません</p>}
           {history.map((track, index) => (
-            <div key={index} onClick={() => {
-              setBookId(track.bookId);
-              setAudioId(track.audioId);
-              setTrackNo(track.trackNo);
-            }} className="w-full cursor-pointer rounded-md border border-slate-300 bg-slate-120/100 px-3 py-2 hover:bg-slate-200">
-              <p className="text-sm text-slate-500">{track.bookName} - {track.audioName}</p>
+            <div
+              key={index}
+              onClick={() => {
+                setBookId(track.bookId);
+                setAudioId(track.audioId);
+                setTrackNo(track.trackNo);
+              }}
+              className="w-full cursor-pointer rounded-md border border-slate-300 bg-slate-120/100 px-3 py-2 hover:bg-slate-200">
+              <p className="text-sm text-slate-500">
+                {track.bookName} - {track.audioName}
+              </p>
               {track.trackName}
             </div>
           ))}
         </div>
       </details>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
