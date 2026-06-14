@@ -9,7 +9,7 @@ export type AudioSource = {
   url: string;
 };
 
-export type RepeatMode = 'off' | 'one' | 'all' | 'custom' | 'kikinagashi';
+export type RepeatMode = 'off' | 'one' | 'all' | 'custom';
 
 export type TrackInfo = {
   bookId: number;

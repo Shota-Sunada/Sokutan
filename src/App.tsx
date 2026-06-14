@@ -87,8 +87,6 @@ function App() {
       } else {
         moveTrack(1);
       }
-    } else if (repeatMode === 'kikinagashi') {
-      moveTrack(1);
     }
   }
 
