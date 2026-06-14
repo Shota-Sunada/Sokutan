@@ -5,7 +5,7 @@ import { books } from './core/books';
 import AudioPlayer from 'react-h5-audio-player';
 import type { RepeatMode, TrackInfo } from './core/types';
 import { IoMdSkipBackward, IoMdSkipForward } from 'react-icons/io';
-import { FaPlay } from 'react-icons/fa';
+import { FaPlay, FaExternalLinkAlt } from 'react-icons/fa';
 
 function App() {
   const [bookId, setBookId] = useState(0);
@@ -229,34 +229,44 @@ function App() {
           </button> */}
         </>
       )}
-      <div className="m-2">
-        <button onClick={() => setIsModalOpened(!isModalOpened)}>トラックを選択</button>
-        {isModalOpened && (
-          <>
-            <div className="absolute bg-[#00000096] w-full h-full z-700 left-0 right-0 top-0 bottom-0 m-auto" onClick={() => setIsModalOpened(false)}></div>
-            <div className="absolute bg-white border border-gray-200 rounded-md w-[80%] h-[80%] z-800 top-0 left-0 bottom-0 right-0 m-auto shadow-xl backdrop-blur-xl overflow-y-scroll p-8">
-              <div className="flex justify-center flex-col items-center">
-                <p className="text-xl mb-2">再生するトラックを選択</p>
-                <div className="flex items-center flex-col">
-                  {Array.from({ length: book.sections.length }, (_, i) => (
-                    <div className="flex flex-row w-full items-center" key={i}>
-                      {trackNo == i + 1 ? <FaPlay /> : <span className="mr-1">{i + 1}.</span>}
-                      <button
-                        key={i}
-                        className={`px-4 py-2 m-2`}
-                        onClick={() => {
-                          setIsModalOpened(false);
-                          setTrackNo(i + 1);
-                        }}>
-                        <span>{book.sections[i]}</span>
-                      </button>
-                    </div>
-                  ))}
+      <div className="flex flex-row mb-4">
+        <div className="mx-1">
+          <button onClick={() => setIsModalOpened(!isModalOpened)}>トラックを選択</button>
+          {isModalOpened && (
+            <>
+              <div className="absolute bg-[#00000096] w-full h-full z-700 left-0 right-0 top-0 bottom-0 m-auto" onClick={() => setIsModalOpened(false)}></div>
+              <div className="absolute bg-white border border-gray-200 rounded-md w-[80%] h-[80%] z-800 top-0 left-0 bottom-0 right-0 m-auto shadow-xl backdrop-blur-xl overflow-y-scroll p-8">
+                <div className="flex justify-center flex-col items-center">
+                  <p className="text-xl mb-2">再生するトラックを選択</p>
+                  <div className="flex items-center flex-col">
+                    {Array.from({ length: book.sections.length }, (_, i) => (
+                      <div className="flex flex-row w-full items-center" key={i}>
+                        {trackNo == i + 1 ? <FaPlay /> : <span className="mr-1">{i + 1}.</span>}
+                        <button
+                          key={i}
+                          className={`px-4 py-2 m-2`}
+                          onClick={() => {
+                            setIsModalOpened(false);
+                            setTrackNo(i + 1);
+                          }}>
+                          <span>{book.sections[i]}</span>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
+        </div>
+        <div className="mx-1">
+          <a href="https://github.com/Shota-Sunada/Sokutan/wiki" target="_blank" referrerPolicy="no-referrer">
+            <button className="flex flex-row items-center">
+              <span className="mr-2">ヘルプ</span>
+              <FaExternalLinkAlt />
+            </button>
+          </a>
+        </div>
       </div>
       {trackNo != 0 && (
         <>
