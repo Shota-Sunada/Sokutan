@@ -4,6 +4,8 @@ import './App.css';
 import { books } from './core/books';
 import AudioPlayer from 'react-h5-audio-player';
 import type { RepeatMode, TrackInfo } from './core/types';
+import { IoMdSkipBackward, IoMdSkipForward } from 'react-icons/io';
+import { FaPlay } from 'react-icons/fa';
 
 function App() {
   const [bookId, setBookId] = useState(0);
@@ -11,11 +13,14 @@ function App() {
   const [trackNo, setTrackNo] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [repeatMode, setRepeatMode] = useState<RepeatMode>((localStorage.getItem('repeatMode') as RepeatMode) || 'off');
-  const [skipSeconds, setSkipSeconds] = useState(Number(localStorage.getItem('skipSeconds') || '3'));
+  // const [skipSeconds, setSkipSeconds] = useState(Number(localStorage.getItem('skipSeconds') || '3'));
+  const skipSeconds = 3;
   const [history, setHistory] = useState(() => {
     const stored = localStorage.getItem('history');
     return stored ? (JSON.parse(stored) as TrackInfo[]) : [];
   });
+
+  const [isModalOpened, setIsModalOpened] = useState(false);
 
   const audioRef = useRef<AudioPlayer>(null);
   const inputRangeRef = useRef<HTMLInputElement>(null);
@@ -82,6 +87,8 @@ function App() {
       } else {
         moveTrack(1);
       }
+    } else if (repeatMode === 'kikinagashi') {
+      moveTrack(1);
     }
   }
 
@@ -156,7 +163,7 @@ function App() {
       trackNo,
       bookName: book.title,
       audioName: book.audios[audioId].name,
-      trackName: `${trackNo}.${book.sections[trackNo - 1]}`
+      trackName: `${trackNo}. ${book.sections[trackNo - 1]}`
     };
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -211,63 +218,100 @@ function App() {
             ))}
           </div>
         </>
-      )}
+      )}*/}
       {trackNo > 0 && (
         <>
-          <p className="text-lg mb-4">
+          <p className="text-lg mb-2">
             {trackNo}.{book.sections[trackNo - 1]}
           </p>
-          <button className="mb-4  px-4 py-1" onClick={() => setTrackNo(0)}>
+          {/* <button className="mb-4  px-4 py-1" onClick={() => setTrackNo(0)}>
             トラック番号選択に戻る
-          </button>
+          </button> */}
         </>
-      )} */}
-      <div>
-        <button></button>
+      )}
+      <div className="m-2">
+        <button onClick={() => setIsModalOpened(!isModalOpened)}>トラックを選択</button>
+        {isModalOpened && (
+          <>
+            <div className="absolute bg-[#00000096] w-full h-full z-700 left-0 right-0 top-0 bottom-0 m-auto" onClick={() => setIsModalOpened(false)}></div>
+            <div className="absolute bg-white border border-gray-200 rounded-md w-[80%] h-[80%] z-800 top-0 left-0 bottom-0 right-0 m-auto shadow-xl backdrop-blur-xl overflow-y-scroll p-8">
+              <div className="flex justify-center flex-col items-center">
+                <p className="text-xl mb-2">再生するトラックを選択</p>
+                <div className="flex items-center flex-col">
+                  {Array.from({ length: book.sections.length }, (_, i) => (
+                    <div className="flex flex-row w-full items-center" key={i}>
+                      {trackNo == i + 1 ? <FaPlay /> : <span className="mr-1">{i + 1}.</span>}
+                      <button
+                        key={i}
+                        className={`px-4 py-2 m-2`}
+                        onClick={() => {
+                          setIsModalOpened(false);
+                          setTrackNo(i + 1);
+                        }}>
+                        <span>{book.sections[i]}</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
-      <div className="w-[80%] mb-6">
-        <AudioPlayer src={`${book.audios[audioId].url}${trackNo.toString().padStart(2, '0')}.mp3`} showJumpControls={false} ref={audioRef} onEnded={handleEnded} />
-      </div>
-      <div className="text-lg mb-2 flex items-center">
-        <button className="mr-3" onClick={() => moveTrack(-1)}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="#868686">
-            <polygon points="11,3 3,12 11,21" />
-            <polygon points="21,3 13,12 21,21" />
-          </svg>
-        </button>
-        <button className="mr-3 px-4 py-1 mx-1" onClick={() => skipTime(-skipSeconds)}>
-          -{skipSeconds}s
-        </button>
-        <button className="px-4 py-1 mx-1" onClick={() => skipTime(skipSeconds)}>
-          +{skipSeconds}s
-        </button>
-        <button className="ml-3" onClick={() => moveTrack(1)}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="#868686">
-            <polygon points="3,3 11,12 3,21" />
-            <polygon points="13,3 21,12 13,21" />
-          </svg>
-        </button>
-      </div>
-      <label className="text-lg mb-4 flex items-center space-x-2">
-        <span>スキップする秒数:</span>
-        <input
-          type="number"
-          min="1"
-          value={skipSeconds}
-          onChange={(e) => {
-            const seconds = Number(e.target.value);
-            setSkipSeconds(seconds);
-            localStorage.setItem('skipSeconds', `${seconds}`);
-          }}
-          className="px-2 py-1 w-16"
-        />
-        秒
-      </label>
-      <p className="text-lg mb-2">
-        再生速度:
-        <label>
+      {trackNo != 0 && (
+        <>
+          <div className="w-[80%] mb-3">
+            <AudioPlayer src={`${book.audios[audioId].url}${trackNo.toString().padStart(2, '0')}.mp3`} showJumpControls={false} ref={audioRef} onEnded={handleEnded} />
+          </div>
+          <div className="text-lg mb-2 flex items-center">
+            <button className="mr-3" onClick={() => moveTrack(-1)}>
+              <IoMdSkipBackward />
+            </button>
+            <button className="mr-3 px-4 py-1 mx-1" onClick={() => skipTime(-skipSeconds)}>
+              -{skipSeconds}s
+            </button>
+            <button className="px-4 py-1 mx-1" onClick={() => skipTime(skipSeconds)}>
+              +{skipSeconds}s
+            </button>
+            <button className="ml-3" onClick={() => moveTrack(1)}>
+              <IoMdSkipForward />
+            </button>
+          </div>
+          {/* <label className="text-lg mb-4 flex items-center space-x-2">
+            <span>スキップする秒数:</span>
+            <input
+              type="number"
+              min="1"
+              value={skipSeconds}
+              onChange={(e) => {
+                const seconds = Number(e.target.value);
+                setSkipSeconds(seconds);
+                localStorage.setItem('skipSeconds', `${seconds}`);
+              }}
+              className="px-2 py-1 w-16"
+            />
+            秒
+          </label> */}
+          <p className="text-lg mb-2">
+            再生速度:
+            <label>
+              <input
+                type="number"
+                min="0.25"
+                max="2.5"
+                step="0.05"
+                value={playbackRate}
+                onChange={(e) => {
+                  const rate = Number(e.target.value);
+                  updateRate(rate);
+                }}
+                className="rounded px-2 py-1 w-16 text-right"
+              />
+              x
+            </label>
+          </p>
           <input
-            type="number"
+            type="range"
             min="0.25"
             max="2.5"
             step="0.05"
@@ -276,86 +320,76 @@ function App() {
               const rate = Number(e.target.value);
               updateRate(rate);
             }}
-            className="rounded px-2 py-1 w-16 text-right"
+            ref={inputRangeRef}
           />
-          x
-        </label>
-      </p>
-      <input
-        type="range"
-        min="0.25"
-        max="2.5"
-        step="0.05"
-        value={playbackRate}
-        onChange={(e) => {
-          const rate = Number(e.target.value);
-          updateRate(rate);
-        }}
-        ref={inputRangeRef}
-      />
-      <div className="flex items-center mt-4 mb-4">
-        {[0.8, 1, 1.2, 1.5].map((rate) => (
-          <button key={rate} className={`px-4 py-1 mx-1 ${playbackRate === rate ? 'bg-gray-300' : ''}`} onClick={() => updateRate(rate)}>
-            {rate}x
-          </button>
-        ))}
-      </div>
-      <label className="text-lg mb-2">
-        <span className="mr-2">リピート:</span>
-        <select
-          className="px-2 py-1"
-          value={repeatMode}
-          onChange={(e) => {
-            setRepeatMode(e.target.value as RepeatMode);
-            localStorage.setItem('repeatMode', e.target.value);
-          }}>
-          <option value="off">オフ</option>
-          <option value="one">トラック</option>
-          <option value="all">ALL</option>
-          <option value="custom">カスタム</option>
-        </select>
-      </label>
-      {repeatMode === 'custom' && (
-        <>
+          <div className="flex items-center mt-4 mb-4">
+            {[0.8, 1, 1.2, 1.5].map((rate) => (
+              <button key={rate} className={`px-4 py-1 mx-1 ${playbackRate === rate ? 'bg-gray-300' : ''}`} onClick={() => updateRate(rate)}>
+                {rate}x
+              </button>
+            ))}
+          </div>
           <label className="text-lg mb-2">
-            <span className="mr-2">開始:</span>
-            <input
-              type="number"
-              min="1"
-              max={book.sections.length}
-              value={customRepeatStart}
+            <span className="mr-2">リピート:</span>
+            <select
+              className="px-2 py-1"
+              value={repeatMode}
               onChange={(e) => {
-                const newStart = Number(e.target.value);
-                setCustomRepeatStart(newStart);
-                localStorage.setItem('customRepeatStart', `${newStart}`);
-                if (customRepeatEnd < newStart) {
-                  setCustomRepeatEnd(newStart);
-                  localStorage.setItem('customRepeatEnd', `${newStart}`);
-                }
-              }}
-              className="px-2 py-1 w-16"
-            />
-            <span className="ml-2 mr-2">終了:</span>
-            <input
-              type="number"
-              min="1"
-              max={book.sections.length}
-              value={customRepeatEnd}
-              onChange={(e) => {
-                const newEnd = Number(e.target.value);
-                setCustomRepeatEnd(newEnd);
-                localStorage.setItem('customRepeatEnd', `${newEnd}`);
-                if (customRepeatStart > newEnd) {
-                  setCustomRepeatStart(newEnd);
-                  localStorage.setItem('customRepeatStart', `${newEnd}`);
-                }
-              }}
-              className="px-2 py-1 w-16"
-            />
+                setRepeatMode(e.target.value as RepeatMode);
+                localStorage.setItem('repeatMode', e.target.value);
+              }}>
+              <option value="off">オフ</option>
+              <option value="one">これを繰り返す</option>
+              <option value="all">全て再生</option>
+              <option value="custom">範囲指定</option>
+              <option value="kikinagashi">聞き流し</option>
+            </select>
           </label>
+          <>
+            <label className="text-lg mb-2">
+              {/* <span className="mr-2">開始:</span> */}
+              <span className="mr-2">範囲指定:</span>
+              <input
+                disabled={repeatMode != 'custom'}
+                type="number"
+                min="1"
+                max={book.sections.length}
+                value={customRepeatStart}
+                onChange={(e) => {
+                  const newStart = Number(e.target.value);
+                  setCustomRepeatStart(newStart);
+                  localStorage.setItem('customRepeatStart', `${newStart}`);
+                  if (customRepeatEnd < newStart) {
+                    setCustomRepeatEnd(newStart);
+                    localStorage.setItem('customRepeatEnd', `${newStart}`);
+                  }
+                }}
+                className="px-2 py-1 w-16 disabled:bg-gray-200"
+              />
+              {/* <span className="ml-2 mr-2">終了:</span> */}
+              <span className="ml-2 mr-2">から</span>
+              <input
+                disabled={repeatMode != 'custom'}
+                type="number"
+                min="1"
+                max={book.sections.length}
+                value={customRepeatEnd}
+                onChange={(e) => {
+                  const newEnd = Number(e.target.value);
+                  setCustomRepeatEnd(newEnd);
+                  localStorage.setItem('customRepeatEnd', `${newEnd}`);
+                  if (customRepeatStart > newEnd) {
+                    setCustomRepeatStart(newEnd);
+                    localStorage.setItem('customRepeatStart', `${newEnd}`);
+                  }
+                }}
+                className="px-2 py-1 w-16 disabled:bg-gray-200"
+              />
+            </label>
+          </>
         </>
       )}
-      <details className="group text-lg mt-6 w-[60%] max-w-lg rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm backdrop-blur-sm">
+      <details className="group text-lg mt-6 w-[80%] max-w-lg rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm backdrop-blur-sm">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-lg font-medium text-slate-700">
           <span>履歴</span>
           <span className="text-sm text-slate-500 transition-transform group-open:rotate-180">Ⅴ</span>

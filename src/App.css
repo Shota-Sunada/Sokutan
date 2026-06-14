@@ -4,10 +4,17 @@ body {
 }
 
 button,
-input,
-select {
+select,
+input {
   border: 1px solid oklch(87.2% 0.01 258.338);
   border-radius: 0.25rem;
+}
+
+button,
+select {
+  /* padding: 0.25rem 1rem; */
+  padding-block: 0.25rem;
+  padding-inline: 1rem;
 }
 
 .counter {
