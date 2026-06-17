@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @layer base, components;
 
@@ -11,7 +11,7 @@
 }
 
 @layer components {
-  input[type="range"] {
+  input[type='range'] {
     appearance: none;
     width: 200px;
     height: 5px;
@@ -21,7 +21,7 @@
   }
 
   /* Chrome, Safari, Edge */
-  input[type="range"]::-webkit-slider-thumb {
+  input[type='range']::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 20px;
@@ -32,7 +32,7 @@
   }
 
   /* Firefox */
-  input[type="range"]::-moz-range-thumb {
+  input[type='range']::-moz-range-thumb {
     border: none;
     width: 20px;
     height: 20px;
