@@ -422,13 +422,11 @@ function App() {
       </details>
 
       <div className="mt-2">
-        <p>このウェブサイトは、非営利及び教育目的で作成されました。</p>
-        <p>
-          <a href="https://www.zkai.co.jp/" target="_blank" referrerPolicy="no-referrer">
-            全ての音声データの権利はZ会に帰属します。 (クリックするとZ会のウェブサイトが開きます。)
-          </a>
-        </p>
-        <p></p>
+        <a href="https://www.zkai.co.jp/" target="_blank" referrerPolicy="no-referrer">
+          <p>このウェブサイトは、非営利及び教育目的で作成されました。</p>
+          <p>全ての音声データの権利はZ会に帰属します。</p>
+          <p>(この文字をクリックするとZ会のウェブサイトが開きます。)</p>
+        </a>
       </div>
     </div>
   );
