@@ -8,6 +8,8 @@ import { IoMdSkipBackward, IoMdSkipForward } from 'react-icons/io';
 import { FaPlay, FaExternalLinkAlt } from 'react-icons/fa';
 
 function App() {
+  const HISTORY_NUM = 20;
+
   const [bookId, setBookId] = useState(0);
   const [audioId, setAudioId] = useState(0);
   const [trackNo, setTrackNo] = useState(0);
@@ -147,7 +149,7 @@ function App() {
   //   };
   // }, [bookId, audioId, trackNo]);
 
-  //履歴、最新10件
+  //履歴、最新[HISTORY_NUM]件
   useEffect(() => {
     if (trackNo === 0) return;
     const lastEntry = history[0];
@@ -167,7 +169,7 @@ function App() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setHistory((prev) => {
       const updated = [newEntry, ...prev];
-      const filtered = updated.slice(0, 10);
+      const filtered = updated.slice(0, HISTORY_NUM);
       localStorage.setItem('history', JSON.stringify(filtered));
       return filtered;
     });
