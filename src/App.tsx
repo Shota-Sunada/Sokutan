@@ -177,8 +177,8 @@ function App() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <p className="text-3xl mb-4">速単音声プレイヤー</p>
-      <label className="text-lg mb-4">
+      <p className="text-3xl my-2">速単音声プレイヤー</p>
+      <label className="text-lg my-2">
         <span className="mr-2">教材を選択:</span>
         <select
           className="px-2 py-1"
@@ -207,7 +207,7 @@ function App() {
           ))}
         </select>
       </label>
-      <label className="text-lg mb-4">
+      <label className="text-lg my-2">
         <span className="mr-2">音声のタイプを選択:</span>
         <select className="px-2 py-1" value={audioId} onChange={(e) => setAudioId(Number(e.target.value))}>
           {book.audios.map((audio, index) => (
@@ -240,7 +240,7 @@ function App() {
           </button> */}
         </>
       )}
-      <div className="flex flex-row mb-4">
+      <div className="flex flex-row my-2">
         <div className="mx-1">
           <button onClick={() => setIsModalOpened(!isModalOpened)}>トラックを選択</button>
           {isModalOpened && (
@@ -284,7 +284,7 @@ function App() {
           <div className="w-[80%] mb-3">
             <AudioPlayer src={`${book.audios[audioId].url}${trackNo.toString().padStart(2, '0')}.mp3`} showJumpControls={false} ref={audioRef} onEnded={handleEnded} />
           </div>
-          <div className="text-lg mb-2 flex items-center">
+          <div className="text-lg my-2 flex items-center">
             <button className="mr-3" onClick={() => moveTrack(-1)}>
               <IoMdSkipBackward />
             </button>
@@ -313,7 +313,7 @@ function App() {
             />
             秒
           </label> */}
-          <p className="text-lg mb-2">
+          <p className="text-lg my-2">
             再生速度:
             <label>
               <input
@@ -342,15 +342,16 @@ function App() {
               updateRate(rate);
             }}
             ref={inputRangeRef}
+            className="my-2"
           />
-          <div className="flex items-center mt-4 mb-4">
+          <div className="flex items-center my-2">
             {[0.8, 1, 1.2, 1.5].map((rate) => (
               <button key={rate} className={`px-4 py-1 mx-1 ${playbackRate === rate ? 'bg-gray-300' : ''}`} onClick={() => updateRate(rate)}>
                 {rate}x
               </button>
             ))}
           </div>
-          <label className="text-lg mb-2">
+          <label className="text-lg my-2">
             <span className="mr-2">リピート:</span>
             <select
               className="px-2 py-1"
@@ -366,7 +367,7 @@ function App() {
             </select>
           </label>
           <>
-            <label className="text-lg mb-2">
+            <label className="text-lg my-2">
               {/* <span className="mr-2">開始:</span> */}
               <span className="mr-2">範囲指定:</span>
               <input
@@ -409,12 +410,12 @@ function App() {
           </>
         </>
       )}
-      <details className="group text-lg mt-6 w-[80%] max-w-lg rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm backdrop-blur-sm">
+      <details className="group text-lg my-3 w-[80%] max-w-lg rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm backdrop-blur-sm">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-lg font-medium text-slate-700">
           <span>履歴</span>
           <span className="text-sm text-slate-500 transition-transform group-open:rotate-180">Ⅴ</span>
         </summary>
-        <div className="mt-4 flex flex-col items-center gap-3 text-slate-600">
+        <div className="my-2 flex flex-col items-center gap-3 text-slate-600">
           {history.length === 0 && <p className="text-sm text-slate-500">再生履歴はありません</p>}
           {history.map((track, index) => (
             <div
@@ -434,7 +435,7 @@ function App() {
         </div>
       </details>
 
-      <div className="mt-2">
+      <div className="my-2">
         <a href="https://www.zkai.co.jp/" target="_blank" referrerPolicy="no-referrer">
           <p>このウェブサイトは、非営利及び教育目的で作成されました。</p>
           <p>全ての音声データの権利はZ会に帰属します。</p>
