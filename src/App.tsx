@@ -185,6 +185,17 @@ function App() {
           value={bookId}
           onChange={(e) => {
             setBookId(Number(e.target.value));
+
+            // reset custom repeat value
+            if (customRepeatStart < 1) {
+              setCustomRepeatStart(1);
+            }
+            const newMax  = books[Number(e.target.value)].sections.length;
+            if (customRepeatEnd > newMax) {
+              const newEnd = newMax;
+              setCustomRepeatEnd(newEnd);
+            }
+
             //一応音声と番号リセット
             setAudioId(0);
             setTrackNo(0);
