@@ -233,7 +233,7 @@ function App() {
       {trackNo > 0 && (
         <>
           <p className="text-lg mb-2">
-            {trackNo}.{book.sections[trackNo - 1]}
+            No.{trackNo} 「{book.sections[trackNo - 1]}」
           </p>
           {/* <button className="mb-4  px-4 py-1" onClick={() => setTrackNo(0)}>
             トラック番号選択に戻る
