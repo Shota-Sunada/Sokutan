@@ -2,7 +2,7 @@ import type { Book } from './types';
 
 export const books: Book[] = [
   {
-    title: '入門編 改訂第3版',
+    title: '速読英単語 入門編 改訂第3版',
     sections: [
       '3人の兄弟と少女 (1)',
       '3人の兄弟と少女 (2)',
@@ -85,7 +85,7 @@ export const books: Book[] = [
     ]
   },
   {
-    title: '必修編 改訂第8版',
+    title: '速読英単語 必修編 改訂第8版',
     sections: [
       'お茶の木の種類',
       'オオカミの子育て',
@@ -187,7 +187,7 @@ export const books: Book[] = [
     ]
   },
   {
-    title: '上級編 改訂第5版',
+    title: '速読英単語 上級編 改訂第5版',
     sections: [
       '人間と動物の違い',
       '蝶が互いを見分ける方法（1）',
