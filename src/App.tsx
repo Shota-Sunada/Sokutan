@@ -28,6 +28,9 @@ function App() {
   const inputRangeRef = useRef<HTMLInputElement>(null);
   const book = books[bookId];
 
+  const customRepeatStartRef = useRef<HTMLInputElement>(null);
+  const customRepeatEndRef = useRef<HTMLInputElement>(null);
+
   const crs = Number(localStorage.getItem('customRepeatStart') || '1');
   const cre = Number(localStorage.getItem('customRepeatEnd') || `${book.sections.length}`);
   function clamp(x: number) {
@@ -190,7 +193,7 @@ function App() {
             if (customRepeatStart < 1) {
               setCustomRepeatStart(1);
             }
-            const newMax  = books[Number(e.target.value)].sections.length;
+            const newMax = books[Number(e.target.value)].sections.length;
             if (customRepeatEnd > newMax) {
               const newEnd = newMax;
               setCustomRepeatEnd(newEnd);
@@ -282,7 +285,29 @@ function App() {
       {trackNo != 0 && (
         <>
           <div className="w-[80%] mb-3">
-            <AudioPlayer src={`${book.audios[audioId].url}${trackNo.toString().padStart(2, '0')}.mp3`} showJumpControls={false} ref={audioRef} onEnded={handleEnded} />
+            <AudioPlayer
+              src={`${book.audios[audioId].url}${trackNo.toString().padStart(2, '0')}.mp3`}
+              showJumpControls={false}
+              ref={audioRef}
+              onEnded={handleEnded}
+              onPlay={() => {
+                const newStart = Number(customRepeatStartRef.current?.value);
+                setCustomRepeatStart(newStart);
+                localStorage.setItem('customRepeatStart', `${newStart}`);
+                if (customRepeatEnd < newStart) {
+                  setCustomRepeatEnd(newStart);
+                  localStorage.setItem('customRepeatEnd', `${newStart}`);
+                }
+
+                const newEnd = Number(customRepeatEndRef.current?.value);
+                setCustomRepeatEnd(newEnd);
+                localStorage.setItem('customRepeatEnd', `${newEnd}`);
+                if (customRepeatStart > newEnd) {
+                  setCustomRepeatStart(newEnd);
+                  localStorage.setItem('customRepeatStart', `${newEnd}`);
+                }
+              }}
+            />
           </div>
           <div className="text-lg my-2 flex items-center">
             <button className="mr-3" onClick={() => moveTrack(-1)}>
@@ -376,14 +401,9 @@ function App() {
                 min="1"
                 max={book.sections.length}
                 value={customRepeatStart}
+                ref={customRepeatStartRef}
                 onChange={(e) => {
-                  const newStart = Number(e.target.value);
-                  setCustomRepeatStart(newStart);
-                  localStorage.setItem('customRepeatStart', `${newStart}`);
-                  if (customRepeatEnd < newStart) {
-                    setCustomRepeatEnd(newStart);
-                    localStorage.setItem('customRepeatEnd', `${newStart}`);
-                  }
+                  setCustomRepeatStart(Number(e.target.value));
                 }}
                 className="px-2 py-1 w-16 disabled:bg-gray-200"
               />
@@ -395,14 +415,9 @@ function App() {
                 min="1"
                 max={book.sections.length}
                 value={customRepeatEnd}
+                ref={customRepeatEndRef}
                 onChange={(e) => {
-                  const newEnd = Number(e.target.value);
-                  setCustomRepeatEnd(newEnd);
-                  localStorage.setItem('customRepeatEnd', `${newEnd}`);
-                  if (customRepeatStart > newEnd) {
-                    setCustomRepeatStart(newEnd);
-                    localStorage.setItem('customRepeatStart', `${newEnd}`);
-                  }
+                  setCustomRepeatEnd(Number(e.target.value));
                 }}
                 className="px-2 py-1 w-16 disabled:bg-gray-200"
               />
