@@ -11,7 +11,7 @@ function App() {
   const HISTORY_NUM = 20;
   const SPEED_STEP = 0.05;
   const SPEED_MIN = 0.25;
-  const SPEED_MAX = 5.0;
+  const SPEED_MAX = 3.0;
 
   const [bookId, setBookId] = useState(0);
   const [audioId, setAudioId] = useState(0);
