@@ -183,7 +183,8 @@ function App() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <p className="text-3xl my-2">CROWN & 速単 音声プレイヤー</p>
+      {/* <p className="text-3xl my-2">CROWN & 速単 音声プレイヤー</p> */}
+      <p className="text-3xl my-2">速単 音声プレイヤー</p>
       <label className="text-lg my-2">
         <span className="mr-2">教材を選択:</span>
         <select
@@ -213,8 +214,8 @@ function App() {
               </option>
             ))}
           </optgroup>
-          <optgroup label="CROWN 令和4年度～6年度版"></optgroup>
-          <optgroup label="CROWN 令和8年度～版"></optgroup>
+          {/* <optgroup label="CROWN 令和4年度～6年度版"></optgroup> */}
+          {/* <optgroup label="CROWN 令和8年度～版"></optgroup> */}
         </select>
       </label>
       <label className="text-lg my-2">
