@@ -9,6 +9,9 @@ import { FaPlay, FaExternalLinkAlt } from 'react-icons/fa';
 
 function App() {
   const HISTORY_NUM = 20;
+  const SPEED_STEP = 0.05;
+  const SPEED_MIN = 0.25;
+  const SPEED_MAX = 5.0;
 
   const [bookId, setBookId] = useState(0);
   const [audioId, setAudioId] = useState(0);
@@ -48,7 +51,7 @@ function App() {
 
     const inputRange = inputRangeRef.current;
     if (!inputRange) return;
-    const ratio = ((rate - 0.25) / (2.5 - 0.25)) * 100;
+    const ratio = ((rate - SPEED_MIN) / (SPEED_MAX - SPEED_MIN)) * 100;
     inputRange.style.background = `linear-gradient(90deg, #868686 ${ratio}%, #dddddd ${ratio}%)`;
   }
 
@@ -180,7 +183,7 @@ function App() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <p className="text-3xl my-2">速単音声プレイヤー</p>
+      <p className="text-3xl my-2">CROWN & 速単 音声プレイヤー</p>
       <label className="text-lg my-2">
         <span className="mr-2">教材を選択:</span>
         <select
@@ -203,11 +206,15 @@ function App() {
             setAudioId(0);
             setTrackNo(0);
           }}>
-          {books.map((book, index) => (
-            <option key={book.title} value={index}>
-              {book.title}
-            </option>
-          ))}
+          <optgroup label="速読英単語">
+            {books.map((book, index) => (
+              <option key={book.title} value={index}>
+                {book.title}
+              </option>
+            ))}
+          </optgroup>
+          <optgroup label="CROWN 令和4年度～6年度版"></optgroup>
+          <optgroup label="CROWN 令和8年度～版"></optgroup>
         </select>
       </label>
       <label className="text-lg my-2">
@@ -343,9 +350,9 @@ function App() {
             <label>
               <input
                 type="number"
-                min="0.25"
-                max="2.5"
-                step="0.05"
+                min={SPEED_MIN}
+                max={SPEED_MAX}
+                step={SPEED_STEP}
                 value={playbackRate}
                 onChange={(e) => {
                   const rate = Number(e.target.value);
@@ -358,9 +365,9 @@ function App() {
           </p>
           <input
             type="range"
-            min="0.25"
-            max="2.5"
-            step="0.05"
+            min={SPEED_MIN}
+            max={SPEED_MAX}
+            step={SPEED_STEP}
             value={playbackRate}
             onChange={(e) => {
               const rate = Number(e.target.value);
@@ -368,6 +375,9 @@ function App() {
             }}
             ref={inputRangeRef}
             className="my-2"
+            style={{
+              background: `linear-gradient(90deg, #868686 ${((1.0 - SPEED_MIN) / (SPEED_MAX - SPEED_MIN)) * 100}%, #dddddd ${((1.0 - SPEED_MIN) / (SPEED_MAX - SPEED_MIN)) * 100}%)`
+            }}
           />
           <div className="flex items-center my-2">
             {[0.8, 1, 1.2, 1.5].map((rate) => (
