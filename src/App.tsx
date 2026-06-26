@@ -9,6 +9,9 @@ import { FaPlay, FaExternalLinkAlt } from 'react-icons/fa';
 
 function App() {
   const HISTORY_NUM = 20;
+  const SPEED_STEP = 0.05;
+  const SPEED_MIN = 0.25;
+  const SPEED_MAX = 5.0;
 
   const [bookId, setBookId] = useState(0);
   const [audioId, setAudioId] = useState(0);
@@ -48,7 +51,7 @@ function App() {
 
     const inputRange = inputRangeRef.current;
     if (!inputRange) return;
-    const ratio = ((rate - 0.25) / (2.5 - 0.25)) * 100;
+    const ratio = ((rate - SPEED_MIN) / (SPEED_MAX - SPEED_MIN)) * 100;
     inputRange.style.background = `linear-gradient(90deg, #868686 ${ratio}%, #dddddd ${ratio}%)`;
   }
 
@@ -347,9 +350,9 @@ function App() {
             <label>
               <input
                 type="number"
-                min="0.25"
-                max="2.5"
-                step="0.05"
+                min={SPEED_MIN}
+                max={SPEED_MAX}
+                step={SPEED_STEP}
                 value={playbackRate}
                 onChange={(e) => {
                   const rate = Number(e.target.value);
@@ -362,9 +365,9 @@ function App() {
           </p>
           <input
             type="range"
-            min="0.25"
-            max="2.5"
-            step="0.05"
+            min={SPEED_MIN}
+            max={SPEED_MAX}
+            step={SPEED_STEP}
             value={playbackRate}
             onChange={(e) => {
               const rate = Number(e.target.value);
@@ -372,6 +375,9 @@ function App() {
             }}
             ref={inputRangeRef}
             className="my-2"
+            style={{
+              background: `linear-gradient(90deg, #868686 ${((1.0 - SPEED_MIN) / (SPEED_MAX - SPEED_MIN)) * 100}%, #dddddd ${((1.0 - SPEED_MIN) / (SPEED_MAX - SPEED_MIN)) * 100}%)`
+            }}
           />
           <div className="flex items-center my-2">
             {[0.8, 1, 1.2, 1.5].map((rate) => (
