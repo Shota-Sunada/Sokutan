@@ -184,7 +184,7 @@ function App() {
   return (
     <div className="flex flex-col items-center justify-center">
       {/* <p className="text-3xl my-2">CROWN & 速単 音声プレイヤー</p> */}
-      <p className="text-3xl my-2">速単 音声プレイヤー</p>
+      <p className="text-3xl my-2">英語教材 音声プレイヤー</p>
       <label className="text-lg my-2">
         <span className="mr-2">教材を選択:</span>
         <select
