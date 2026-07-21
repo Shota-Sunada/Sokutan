@@ -1,7 +1,8 @@
 import type { Book } from './types';
 
-export const books: Book[] = [
+export const sokutan: Book[] = [
   {
+    id: 'sokutan_nyumon',
     title: '速読英単語 入門編 改訂第3版',
     sections: [
       '3人の兄弟と少女 (1)',
@@ -71,20 +72,21 @@ export const books: Book[] = [
       '子供の世界観を決めるもの (3)',
       '子供の世界観を決めるもの (4)',
       '子供の世界観を決めるもの (5)',
-      '子供の世界観を決めるもの (6)',
+      '子供の世界観を決めるもの (6)'
     ],
     audios: [
       {
         name: '英文（アメリカ英語）',
-        url: 'https://ex2.zkai.co.jp/books/sokutan/nyu_3/sokutan-nyumon_eibun'
+        url: 'https://ex2.zkai.co.jp/books/sokutan/nyu_3/sokutan-nyumon_eibun{0}.mp3'
       },
       {
         name: '英文（イギリス英語）',
-        url: 'https://ex2.zkai.co.jp/books/sokutan/nyu_3/sokutan-nyumon_eibun-brit'
+        url: 'https://ex2.zkai.co.jp/books/sokutan/nyu_3/sokutan-nyumon_eibun-brit{0}.mp3'
       }
     ]
   },
   {
+    id: 'sokutan_hisshu',
     title: '速読英単語 必修編 改訂第8版',
     sections: [
       'お茶の木の種類',
@@ -162,31 +164,32 @@ export const books: Book[] = [
     audios: [
       {
         name: '英文（アメリカ英語）',
-        url: 'https://ex2.zkai.co.jp/books/sokutan/hisshu8/sokutan-hisshu8_eibun_A_'
+        url: 'https://ex2.zkai.co.jp/books/sokutan/hisshu8/sokutan-hisshu8_eibun_A_{0}.mp3'
       },
       {
         name: '英文（イギリス英語）',
-        url: 'https://ex2.zkai.co.jp/books/sokutan/hisshu8/sokutan-hisshu8_eibun_C_'
+        url: 'https://ex2.zkai.co.jp/books/sokutan/hisshu8/sokutan-hisshu8_eibun_C_{0}.mp3'
       },
       {
         name: '単語（英語のみ）',
-        url: 'https://ex2.zkai.co.jp/books/sokutan/hisshu8/sokutan-hisshu8_tango1_'
+        url: 'https://ex2.zkai.co.jp/books/sokutan/hisshu8/sokutan-hisshu8_tango1_{0}.mp3'
       },
       {
         name: '単語（英語→日本語）',
-        url: 'https://ex2.zkai.co.jp/books/sokutan/hisshu8/sokutan-hisshu8_tango2_'
+        url: 'https://ex2.zkai.co.jp/books/sokutan/hisshu8/sokutan-hisshu8_tango2_{0}.mp3'
       },
       {
         name: '単語（日本語→英語）',
-        url: 'https://ex2.zkai.co.jp/books/sokutan/hisshu8/sokutan-hisshu8_tango3_'
+        url: 'https://ex2.zkai.co.jp/books/sokutan/hisshu8/sokutan-hisshu8_tango3_{0}.mp3'
       },
       {
         name: '例文（英語→日本語）',
-        url: 'https://ex2.zkai.co.jp/books/sokutan/hisshu8/sokutan-hisshu8_reibun_'
+        url: 'https://ex2.zkai.co.jp/books/sokutan/hisshu8/sokutan-hisshu8_reibun_{0}.mp3'
       }
     ]
   },
   {
+    id: 'sokutan_jokyu',
     title: '速読英単語 上級編 改訂第5版',
     sections: [
       '人間と動物の違い',
@@ -241,19 +244,19 @@ export const books: Book[] = [
     audios: [
       {
         name: '英文（アメリカ英語）',
-        url: 'https://ex2.zkai.co.jp/books/sokutan/jokyu5/sokutan-jokyu5_eibun_'
+        url: 'https://ex2.zkai.co.jp/books/sokutan/jokyu5/sokutan-jokyu5_eibun_{0}.mp3'
       },
       {
         name: '英文（イギリス英語）',
-        url: 'https://ex2.zkai.co.jp/books/sokutan/jokyu5/sokutan-jokyu5_eibun_br'
+        url: 'https://ex2.zkai.co.jp/books/sokutan/jokyu5/sokutan-jokyu5_eibun_br{0}.mp3'
       },
       {
         name: '単語（英語→日本語）',
-        url: 'https://ex2.zkai.co.jp/books/sokutan/jokyu5/sokutan-jokyu5_tango_'
+        url: 'https://ex2.zkai.co.jp/books/sokutan/jokyu5/sokutan-jokyu5_tango_{0}.mp3'
       },
       {
         name: '例文（英語→日本語）',
-        url: 'https://ex2.zkai.co.jp/books/sokutan/jokyu5/sokutan-jokyu5_reibun_'
+        url: 'https://ex2.zkai.co.jp/books/sokutan/jokyu5/sokutan-jokyu5_reibun_{0}.mp3'
       }
     ]
   }

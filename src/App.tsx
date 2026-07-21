@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import 'react-h5-audio-player/lib/styles.css';
 import './App.css';
-import { books } from './core/books';
+import { sokutan } from './core/books';
 import AudioPlayer from 'react-h5-audio-player';
-import type { RepeatMode, TrackInfo } from './core/types';
+import type { BookId, RepeatMode, TrackInfo } from './core/types';
 import { IoMdSkipBackward, IoMdSkipForward } from 'react-icons/io';
 import { FaPlay, FaExternalLinkAlt } from 'react-icons/fa';
+import { GetBook } from './core/func';
 
 function App() {
   const HISTORY_NUM = 20;
@@ -13,7 +14,7 @@ function App() {
   const SPEED_MIN = 0.25;
   const SPEED_MAX = 3.0;
 
-  const [bookId, setBookId] = useState(0);
+  const [bookId, setBookId] = useState<BookId>();
   const [audioId, setAudioId] = useState(0);
   const [trackNo, setTrackNo] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
@@ -29,15 +30,14 @@ function App() {
 
   const audioRef = useRef<AudioPlayer>(null);
   const inputRangeRef = useRef<HTMLInputElement>(null);
-  const book = books[bookId];
 
   const customRepeatStartRef = useRef<HTMLInputElement>(null);
   const customRepeatEndRef = useRef<HTMLInputElement>(null);
 
   const crs = Number(localStorage.getItem('customRepeatStart') || '1');
-  const cre = Number(localStorage.getItem('customRepeatEnd') || `${book.sections.length}`);
+  const cre = Number(localStorage.getItem('customRepeatEnd') || `${GetBook(bookId).sections.length}`);
   function clamp(x: number) {
-    return Math.min(Math.max(x, 1), book.sections.length);
+    return Math.min(Math.max(x, 1), GetBook(bookId).sections.length);
   }
 
   const [customRepeatStart, setCustomRepeatStart] = useState(clamp(crs));
@@ -60,11 +60,11 @@ function App() {
     const newTrackNo = trackNo + offset;
     if (newTrackNo < 1) {
       //+1or-1しか想定していない
-      setTrackNo(newTrackNo + book.sections.length);
+      setTrackNo(newTrackNo + GetBook(bookId).sections.length);
       return;
     }
-    if (newTrackNo > book.sections.length) {
-      setTrackNo(newTrackNo - book.sections.length);
+    if (newTrackNo > GetBook(bookId).sections.length) {
+      setTrackNo(newTrackNo - GetBook(bookId).sections.length);
       return;
     }
     setTrackNo(newTrackNo);
@@ -159,7 +159,8 @@ function App() {
   useEffect(() => {
     if (trackNo === 0) return;
     const lastEntry = history[0];
-    if (lastEntry && lastEntry.bookId === bookId && lastEntry.audioId === audioId && lastEntry.trackNo === trackNo) {
+    // if (lastEntry && lastEntry.bookId === bookId && lastEntry.audioId === audioId && lastEntry.trackNo === trackNo) {
+    if (lastEntry && lastEntry.audioId === audioId && lastEntry.trackNo === trackNo) {
       return;
     }
 
@@ -167,37 +168,49 @@ function App() {
       bookId,
       audioId,
       trackNo,
-      bookName: book.title,
-      audioName: book.audios[audioId].name,
-      trackName: `${trackNo}. ${book.sections[trackNo - 1]}`
+      bookName: GetBook(bookId).title,
+      audioName: GetBook(bookId).audios[audioId].name,
+      trackName: `${trackNo}. ${GetBook(bookId).sections[trackNo - 1]}`
     };
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setHistory((prev) => {
-      const updated = [newEntry, ...prev];
-      const filtered = updated.slice(0, HISTORY_NUM);
-      localStorage.setItem('history', JSON.stringify(filtered));
-      return filtered;
-    });
-  }, [bookId, audioId, trackNo, history, book.title, book.audios, book.sections]);
+    const id = window.setTimeout(() => {
+      setHistory((prev) => {
+        const updated = [newEntry, ...prev];
+        const filtered = updated.slice(0, HISTORY_NUM);
+        localStorage.setItem('history', JSON.stringify(filtered));
+        return filtered;
+      });
+    }, 0);
+
+    return () => window.clearTimeout(id);
+  }, [bookId, audioId, trackNo, history]);
+
+  const constructURL = () => {
+    switch (bookId) {
+      case 'sokutan_hisshu':
+      case 'sokutan_jokyu':
+      case 'sokutan_nyumon':
+        return GetBook(bookId).audios[audioId].url.replaceAll('{0}', trackNo.toString().padStart(2, '0'));
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center">
       {/* <p className="text-3xl my-2">CROWN & 速単 音声プレイヤー</p> */}
-      <p className="text-3xl my-2">速単 音声プレイヤー</p>
+      <p className="text-3xl my-2">英語教材 音声プレイヤー</p>
       <label className="text-lg my-2">
         <span className="mr-2">教材を選択:</span>
         <select
           className="px-2 py-1"
           value={bookId}
           onChange={(e) => {
-            setBookId(Number(e.target.value));
+            setBookId(e.target.value as BookId);
 
             // reset custom repeat value
             if (customRepeatStart < 1) {
               setCustomRepeatStart(1);
             }
-            const newMax = books[Number(e.target.value)].sections.length;
+            const newMax = GetBook(bookId).sections.length;
             if (customRepeatEnd > newMax) {
               const newEnd = newMax;
               setCustomRepeatEnd(newEnd);
@@ -208,8 +221,8 @@ function App() {
             setTrackNo(0);
           }}>
           <optgroup label="速読英単語">
-            {books.map((book, index) => (
-              <option key={book.title} value={index}>
+            {sokutan.map((book) => (
+              <option key={book.title} value={book.id}>
                 {book.title}
               </option>
             ))}
@@ -221,7 +234,7 @@ function App() {
       <label className="text-lg my-2">
         <span className="mr-2">音声のタイプを選択:</span>
         <select className="px-2 py-1" value={audioId} onChange={(e) => setAudioId(Number(e.target.value))}>
-          {book.audios.map((audio, index) => (
+          {GetBook(bookId).audios.map((audio, index) => (
             <option key={audio.name} value={index}>
               {audio.name}
             </option>
@@ -233,7 +246,7 @@ function App() {
         <>
           <p className="text-lg mb-4">トラック番号を選択:</p>
           <div className="grid grid-cols-6 gap-2 mb-4">
-            {Array.from({ length: book.sections.length }, (_, i) => (
+            {Array.from({ length: GetBook(bookId).sections.length }, (_, i) => (
               <button key={i} className={` px-4 py-1`} onClick={() => setTrackNo(i + 1)}>
                 {i + 1}
               </button>
@@ -244,7 +257,7 @@ function App() {
       {trackNo > 0 && (
         <>
           <p className="text-lg mb-2">
-            No.{trackNo} 「{book.sections[trackNo - 1]}」
+            No.{trackNo} 「{GetBook(bookId).sections[trackNo - 1]}」
           </p>
           {/* <button className="mb-4  px-4 py-1" onClick={() => setTrackNo(0)}>
             トラック番号選択に戻る
@@ -261,7 +274,7 @@ function App() {
                 <div className="flex justify-center flex-col items-center">
                   <p className="text-xl mb-2">再生するトラックを選択</p>
                   <div className="flex items-center flex-col">
-                    {Array.from({ length: book.sections.length }, (_, i) => (
+                    {Array.from({ length: GetBook(bookId).sections.length }, (_, i) => (
                       <div className="flex flex-row w-full items-center" key={i}>
                         {trackNo == i + 1 ? <FaPlay /> : <span className="mr-1">{i + 1}.</span>}
                         <button
@@ -271,7 +284,7 @@ function App() {
                             setIsModalOpened(false);
                             setTrackNo(i + 1);
                           }}>
-                          <span>{book.sections[i]}</span>
+                          <span>{GetBook(bookId).sections[i]}</span>
                         </button>
                       </div>
                     ))}
@@ -294,7 +307,7 @@ function App() {
         <>
           <div className="w-[80%] mb-3">
             <AudioPlayer
-              src={`${book.audios[audioId].url}${trackNo.toString().padStart(2, '0')}.mp3`}
+              src={constructURL()}
               showJumpControls={false}
               ref={audioRef}
               onEnded={handleEnded}
@@ -410,7 +423,7 @@ function App() {
                 disabled={repeatMode != 'custom'}
                 type="number"
                 min="1"
-                max={book.sections.length}
+                max={GetBook(bookId).sections.length}
                 value={customRepeatStart}
                 ref={customRepeatStartRef}
                 onChange={(e) => {
@@ -424,7 +437,7 @@ function App() {
                 disabled={repeatMode != 'custom'}
                 type="number"
                 min="1"
-                max={book.sections.length}
+                max={GetBook(bookId).sections.length}
                 value={customRepeatEnd}
                 ref={customRepeatEndRef}
                 onChange={(e) => {
