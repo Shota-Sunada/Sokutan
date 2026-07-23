@@ -196,54 +196,53 @@ function App() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="flex flex-col items-center justify-center min-w-[80dvw]">
-        {/* <p className="text-3xl my-2">CROWN & 速単 音声プレイヤー</p> */}
-        <p className="text-3xl my-2">英語教材 音声プレイヤー</p>
-        <label className="text-lg my-2 w-full">
-          <span className="mr-2">教材を選択</span>
-          <select
-            className="px-2 py-1"
-            value={bookId}
-            onChange={(e) => {
-              setBookId(e.target.value as BookId);
+      {/* <p className="text-3xl my-2">CROWN & 速単 音声プレイヤー</p> */}
+      <p className="text-3xl my-2">英語教材 音声プレイヤー</p>
+      <label className="flex items-center justify-center text-lg my-2 w-full">
+        <span className="mr-2">教材を選択</span>
+        <select
+          className="px-2 py-1"
+          value={bookId}
+          onChange={(e) => {
+            setBookId(e.target.value as BookId);
 
-              // reset custom repeat value
-              if (customRepeatStart < 1) {
-                setCustomRepeatStart(1);
-              }
-              const newMax = GetBook(bookId).sections.length;
-              if (customRepeatEnd > newMax) {
-                const newEnd = newMax;
-                setCustomRepeatEnd(newEnd);
-              }
+            // reset custom repeat value
+            if (customRepeatStart < 1) {
+              setCustomRepeatStart(1);
+            }
+            const newMax = GetBook(bookId).sections.length;
+            if (customRepeatEnd > newMax) {
+              const newEnd = newMax;
+              setCustomRepeatEnd(newEnd);
+            }
 
-              //一応音声と番号リセット
-              setAudioId(0);
-              setTrackNo(0);
-            }}>
-            <optgroup label="速読英単語">
-              {sokutan.map((book) => (
-                <option key={book.title} value={book.id}>
-                  {book.title}
-                </option>
-              ))}
-            </optgroup>
-            {/* <optgroup label="CROWN 令和4年度～6年度版"></optgroup> */}
-            {/* <optgroup label="CROWN 令和8年度～版"></optgroup> */}
-          </select>
-        </label>
-        <label className="text-lg my-2 w-full">
-          <span className="mr-2">音声を選択</span>
-          <select className="px-2 py-1" value={audioId} onChange={(e) => setAudioId(Number(e.target.value))}>
-            {GetBook(bookId).audios.map((audio, index) => (
-              <option key={audio.name} value={index}>
-                {audio.name}
+            //一応音声と番号リセット
+            setAudioId(0);
+            setTrackNo(0);
+          }}>
+          <optgroup label="速読英単語">
+            {sokutan.map((book) => (
+              <option key={book.title} value={book.id}>
+                {book.title}
               </option>
             ))}
-          </select>
-        </label>
-        {/* a lot of thanks for @tau34 */}
-        {/* {trackNo === 0 && (
+          </optgroup>
+          {/* <optgroup label="CROWN 令和4年度～6年度版"></optgroup> */}
+          {/* <optgroup label="CROWN 令和8年度～版"></optgroup> */}
+        </select>
+      </label>
+      <label className="flex items-center justify-center text-lg my-2 w-full">
+        <span className="mr-2">音声を選択</span>
+        <select className="px-2 py-1" value={audioId} onChange={(e) => setAudioId(Number(e.target.value))}>
+          {GetBook(bookId).audios.map((audio, index) => (
+            <option key={audio.name} value={index}>
+              {audio.name}
+            </option>
+          ))}
+        </select>
+      </label>
+      {/* a lot of thanks for @tau34 */}
+      {/* {trackNo === 0 && (
         <>
           <p className="text-lg mb-4">トラック番号を選択:</p>
           <div className="grid grid-cols-6 gap-2 mb-4">
@@ -255,17 +254,16 @@ function App() {
           </div>
         </>
       )}*/}
-        {trackNo > 0 && (
-          <>
-            <p className="text-lg mb-2">
-              No.{trackNo} 「{GetBook(bookId).sections[trackNo - 1]}」
-            </p>
-            {/* <button className="mb-4  px-4 py-1" onClick={() => setTrackNo(0)}>
+      {trackNo > 0 && (
+        <>
+          <p className="text-lg mb-2">
+            No.{trackNo} 「{GetBook(bookId).sections[trackNo - 1]}」
+          </p>
+          {/* <button className="mb-4  px-4 py-1" onClick={() => setTrackNo(0)}>
             トラック番号選択に戻る
           </button> */}
-          </>
-        )}
-      </div>
+        </>
+      )}
       <div className="flex flex-row my-2">
         <div className="mx-1">
           <button onClick={() => setIsModalOpened(!isModalOpened)}>トラックを選択</button>
