@@ -19,7 +19,7 @@ export function get_local_as_type<T>(key: string): T | undefined {
 }
 
 export const set_local = (key: string, value: string) => {
-  set_local(key, value);
+  localStorage.setItem(key, value);
 };
 
 export const remove_local = (key: string) => {
