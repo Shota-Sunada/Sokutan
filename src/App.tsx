@@ -28,6 +28,7 @@ function App() {
   });
 
   const [isModalOpened, setIsModalOpened] = useState(false);
+  const [isHistoryModalOpened, setIsHistoryModalOpened] = useState(false);
 
   const audioRef = useRef<AudioPlayer>(null);
   const inputRangeRef = useRef<HTMLInputElement>(null);
@@ -272,7 +273,7 @@ function App() {
       )}
       <div className="flex flex-row my-2">
         <div className="mx-1">
-          <button className="p-1" onClick={() => setIsModalOpened(!isModalOpened)}>
+          <button className="w-[40dvw] h-[6dvh]" onClick={() => setIsModalOpened(!isModalOpened)}>
             トラックを選択
           </button>
           {isModalOpened && (
@@ -301,14 +302,6 @@ function App() {
               </div>
             </>
           )}
-        </div>
-        <div className="mx-1">
-          <a href="https://github.com/Shota-Sunada/Sokutan/wiki/ヘルプページ" target="_blank" referrerPolicy="no-referrer">
-            <button className="flex flex-row items-center">
-              <span className="p-1 mr-2">ヘルプ</span>
-              <FaExternalLinkAlt />
-            </button>
-          </a>
         </div>
       </div>
       {trackNo != 0 && (
@@ -457,36 +450,57 @@ function App() {
           </>
         </>
       )}
-      <details className="group text-lg my-3 w-[80%] max-w-lg rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm backdrop-blur-sm">
-        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-lg font-medium text-slate-700">
-          <span>履歴</span>
-          <span className="text-sm text-slate-500 transition-transform group-open:rotate-180">Ⅴ</span>
-        </summary>
-        <div className="my-2 flex flex-col items-center gap-3 text-slate-600">
-          {history.length === 0 && <p className="text-sm text-slate-500">再生履歴はありません</p>}
-          {history.map((track, index) => (
-            <div
-              key={index}
-              onClick={() => {
-                setBookId(track.bookId);
-                setAudioId(track.audioId);
-                setTrackNo(track.trackNo);
-              }}
-              className="w-full cursor-pointer rounded-md border border-slate-300 bg-slate-120/100 px-3 py-2 hover:bg-slate-200">
-              <p className="text-sm text-slate-500">
-                {track.bookName} - {track.audioName}
-              </p>
-              {track.trackName}
+      <div className="mx-1">
+        <button className="w-[40dvw] h-[5dvh]" onClick={() => setIsHistoryModalOpened(!isHistoryModalOpened)}>
+          履歴を選択
+        </button>
+        {isHistoryModalOpened && (
+          <>
+            <div className="absolute bg-[#00000096] w-full h-full z-700 left-0 right-0 top-0 bottom-0 m-auto" onClick={() => setIsHistoryModalOpened(false)}></div>
+            <div className="absolute bg-white border border-gray-200 rounded-md w-[85%] h-[85%] z-800 top-0 left-0 bottom-0 right-0 m-auto shadow-xl backdrop-blur-xl overflow-y-scroll p-8">
+              <div className="flex justify-center flex-col items-center">
+                <p className="text-xl mb-2">再生履歴を選択</p>
+                <div className="my-2 flex flex-col items-center gap-3 text-slate-600 h-auto overflow-y-auto">
+                  {history.length === 0 && <p className="text-sm text-slate-500">再生履歴はありません</p>}
+                  {history.map((track, index) => (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        setBookId(track.bookId);
+                        setAudioId(track.audioId);
+                        setTrackNo(track.trackNo);
+                      }}
+                      className="w-full cursor-pointer rounded-md border border-slate-300 bg-slate-120/100 px-3 py-2 hover:bg-slate-200">
+                      <p className="text-sm text-slate-500">
+                        {track.bookName} - {track.audioName}
+                      </p>
+                      {track.trackName}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          ))}
-        </div>
-      </details>
-
-      <div className="m-2">
+          </>
+        )}
+      </div>
+      <div className="m-2 text-center">
         <a href="https://www.zkai.co.jp/" target="_blank" referrerPolicy="no-referrer">
-          <p>このウェブサイトは、非営利及び教育目的で作成されました。</p>
-          <p>全ての音声データの権利はZ会に帰属します。</p>
-          <p>(この文字をクリックするとZ会のウェブサイトが開きます。)</p>
+          <p>
+            <span>このウェブサイトは、非営利及び教育目的で作成されました。</span>
+            <span>全ての音声データの権利はZ会に帰属します。</span>
+          </p>
+          <p>
+            <span>(この文字をクリックするとZ会のウェブサイトが開きます。)</span>
+          </p>
+        </a>
+      </div>
+      
+      <div className="m-3">
+        <a href="https://github.com/Shota-Sunada/Sokutan/wiki/ヘルプページ" target="_blank" referrerPolicy="no-referrer">
+          <button className="flex flex-row items-center">
+            <span className="p-1 mr-2">ヘルプ</span>
+            <FaExternalLinkAlt />
+          </button>
         </a>
       </div>
     </div>
