@@ -273,7 +273,7 @@ function App() {
       )}
       <div className="flex flex-row my-2">
         <div className="mx-1">
-          <button onClick={() => setIsModalOpened(!isModalOpened)}>トラックを選択</button>
+          <button className="p-1" onClick={() => setIsModalOpened(!isModalOpened)}>トラックを選択</button>
           {isModalOpened && (
             <>
               <div className="absolute bg-[#00000096] w-full h-full z-700 left-0 right-0 top-0 bottom-0 m-auto" onClick={() => setIsModalOpened(false)}></div>
@@ -304,7 +304,7 @@ function App() {
         <div className="mx-1">
           <a href="https://github.com/Shota-Sunada/Sokutan/wiki/ヘルプページ" target="_blank" referrerPolicy="no-referrer">
             <button className="flex flex-row items-center">
-              <span className="mr-2">ヘルプ</span>
+              <span className="p-1 mr-2">ヘルプ</span>
               <FaExternalLinkAlt />
             </button>
           </a>
