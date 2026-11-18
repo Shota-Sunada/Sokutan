@@ -273,7 +273,7 @@ function App() {
       )}
       <div className="flex flex-row my-2">
         <div className="mx-1">
-          <button className="w-[40dvw] h-[6dvh]" onClick={() => setIsModalOpened(!isModalOpened)}>
+          <button className="w-[40dvw] h-[6dvh] max-w-75" onClick={() => setIsModalOpened(!isModalOpened)}>
             トラックを選択
           </button>
           {isModalOpened && (
@@ -451,7 +451,7 @@ function App() {
         </>
       )}
       <div className="mx-1">
-        <button className="w-[40dvw] h-[5dvh]" onClick={() => setIsHistoryModalOpened(!isHistoryModalOpened)}>
+        <button className="w-[40dvw] h-[5dvh] max-w-75" onClick={() => setIsHistoryModalOpened(!isHistoryModalOpened)}>
           履歴を選択
         </button>
         {isHistoryModalOpened && (
