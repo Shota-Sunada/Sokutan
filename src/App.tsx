@@ -7,6 +7,7 @@ import type { BookId, RepeatMode, TrackInfo } from './core/types';
 import { IoMdSkipBackward, IoMdSkipForward } from 'react-icons/io';
 import { FaPlay, FaExternalLinkAlt } from 'react-icons/fa';
 import { GetBook } from './core/func';
+import { get_local, get_local_as_type, set_local } from './core/extensions';
 
 function App() {
   const HISTORY_NUM = 20;
@@ -18,11 +19,11 @@ function App() {
   const [audioId, setAudioId] = useState(0);
   const [trackNo, setTrackNo] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
-  const [repeatMode, setRepeatMode] = useState<RepeatMode>((localStorage.getItem('repeatMode') as RepeatMode) || 'off');
+  const [repeatMode, setRepeatMode] = useState<RepeatMode>(get_local_as_type<RepeatMode>('repeatMode') || 'off');
   // const [skipSeconds, setSkipSeconds] = useState(Number(localStorage.getItem('skipSeconds') || '3'));
   const skipSeconds = 3;
   const [history, setHistory] = useState(() => {
-    const stored = localStorage.getItem('history');
+    const stored = get_local('history');
     return stored ? (JSON.parse(stored) as TrackInfo[]) : [];
   });
 
@@ -34,8 +35,8 @@ function App() {
   const customRepeatStartRef = useRef<HTMLInputElement>(null);
   const customRepeatEndRef = useRef<HTMLInputElement>(null);
 
-  const crs = Number(localStorage.getItem('customRepeatStart') || '1');
-  const cre = Number(localStorage.getItem('customRepeatEnd') || `${GetBook(bookId).sections.length}`);
+  const crs = Number(get_local('customRepeatStart') || '1');
+  const cre = Number(get_local('customRepeatEnd') || `${GetBook(bookId).sections.length}`);
   function clamp(x: number) {
     return Math.min(Math.max(x, 1), GetBook(bookId).sections.length);
   }
@@ -177,7 +178,7 @@ function App() {
       setHistory((prev) => {
         const updated = [newEntry, ...prev];
         const filtered = updated.slice(0, HISTORY_NUM);
-        localStorage.setItem('history', JSON.stringify(filtered));
+        set_local('history', JSON.stringify(filtered));
         return filtered;
       });
     }, 0);
@@ -314,18 +315,18 @@ function App() {
               onPlay={() => {
                 const newStart = Number(customRepeatStartRef.current?.value);
                 setCustomRepeatStart(newStart);
-                localStorage.setItem('customRepeatStart', `${newStart}`);
+                set_local('customRepeatStart', `${newStart}`);
                 if (customRepeatEnd < newStart) {
                   setCustomRepeatEnd(newStart);
-                  localStorage.setItem('customRepeatEnd', `${newStart}`);
+                  set_local('customRepeatEnd', `${newStart}`);
                 }
 
                 const newEnd = Number(customRepeatEndRef.current?.value);
                 setCustomRepeatEnd(newEnd);
-                localStorage.setItem('customRepeatEnd', `${newEnd}`);
+                set_local('customRepeatEnd', `${newEnd}`);
                 if (customRepeatStart > newEnd) {
                   setCustomRepeatStart(newEnd);
-                  localStorage.setItem('customRepeatStart', `${newEnd}`);
+                  set_local('customRepeatStart', `${newEnd}`);
                 }
               }}
             />
@@ -353,7 +354,7 @@ function App() {
               onChange={(e) => {
                 const seconds = Number(e.target.value);
                 setSkipSeconds(seconds);
-                localStorage.setItem('skipSeconds', `${seconds}`);
+                set_local('skipSeconds', `${seconds}`);
               }}
               className="px-2 py-1 w-16"
             />
@@ -407,7 +408,7 @@ function App() {
               value={repeatMode}
               onChange={(e) => {
                 setRepeatMode(e.target.value as RepeatMode);
-                localStorage.setItem('repeatMode', e.target.value);
+                set_local('repeatMode', e.target.value);
               }}>
               <option value="off">オフ</option>
               <option value="one">これを繰り返す</option>

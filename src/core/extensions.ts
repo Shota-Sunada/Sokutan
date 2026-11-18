@@ -9,8 +9,17 @@ export const get_local = (key: string): string | undefined => {
   }
 };
 
+export function get_local_as_type<T>(key: string): T | undefined {
+  const value = localStorage.getItem(key) as T;
+  if (value) {
+    return value;
+  } else {
+    return undefined;
+  }
+}
+
 export const set_local = (key: string, value: string) => {
-  localStorage.setItem(key, value);
+  set_local(key, value);
 };
 
 export const remove_local = (key: string) => {
