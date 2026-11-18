@@ -15,7 +15,7 @@ function App() {
   const SPEED_MIN = 0.25;
   const SPEED_MAX = 3.0;
 
-  const [bookId, setBookId] = useState<BookId>();
+  const [bookId, setBookId] = useState<BookId | undefined>(get_local_as_type<BookId>('BookLastSelected'));
   const [audioId, setAudioId] = useState(0);
   const [trackNo, setTrackNo] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
@@ -205,13 +205,14 @@ function App() {
           className="px-2 py-1"
           value={bookId}
           onChange={(e) => {
-            setBookId(e.target.value as BookId);
+            const newBookId = e.target.value as BookId
+            setBookId(newBookId);
 
             // reset custom repeat value
             if (customRepeatStart < 1) {
               setCustomRepeatStart(1);
             }
-            const newMax = GetBook(bookId).sections.length;
+            const newMax = GetBook(newBookId).sections.length;
             if (customRepeatEnd > newMax) {
               const newEnd = newMax;
               setCustomRepeatEnd(newEnd);
@@ -220,6 +221,11 @@ function App() {
             //一応音声と番号リセット
             setAudioId(0);
             setTrackNo(0);
+
+            if (newBookId) {
+              set_local('BookLastSelected', newBookId);
+              console.log("hi")
+            }
           }}>
           <optgroup label="速読英単語">
             {sokutan.map((book) => (
