@@ -205,7 +205,7 @@ function App() {
           className="px-2 py-1"
           value={bookId}
           onChange={(e) => {
-            const newBookId = e.target.value as BookId
+            const newBookId = e.target.value as BookId;
             setBookId(newBookId);
 
             // reset custom repeat value
@@ -224,7 +224,6 @@ function App() {
 
             if (newBookId) {
               set_local('BookLastSelected', newBookId);
-              console.log("hi")
             }
           }}>
           <optgroup label="速読英単語">
@@ -273,7 +272,9 @@ function App() {
       )}
       <div className="flex flex-row my-2">
         <div className="mx-1">
-          <button className="p-1" onClick={() => setIsModalOpened(!isModalOpened)}>トラックを選択</button>
+          <button className="p-1" onClick={() => setIsModalOpened(!isModalOpened)}>
+            トラックを選択
+          </button>
           {isModalOpened && (
             <>
               <div className="absolute bg-[#00000096] w-full h-full z-700 left-0 right-0 top-0 bottom-0 m-auto" onClick={() => setIsModalOpened(false)}></div>
@@ -337,17 +338,17 @@ function App() {
               }}
             />
           </div>
-          <div className="text-lg my-2 flex items-center">
-            <button className="mr-3" onClick={() => moveTrack(-1)}>
+          <div className="text-lg my-2 grid grid-cols-4 items-center h-[4dvh]">
+            <button className="mx-1 h-full flex items-center justify-center" onClick={() => moveTrack(-1)}>
               <IoMdSkipBackward />
             </button>
-            <button className="mr-3 px-4 py-1 mx-1" onClick={() => skipTime(-skipSeconds)}>
-              -{skipSeconds}s
+            <button className="mx-1 h-full flex items-center justify-center" onClick={() => skipTime(-skipSeconds)}>
+              <p className="m-1">-{skipSeconds}s</p>
             </button>
-            <button className="px-4 py-1 mx-1" onClick={() => skipTime(skipSeconds)}>
-              +{skipSeconds}s
+            <button className="mx-1 h-full flex items-center justify-center" onClick={() => skipTime(skipSeconds)}>
+              <p className="m-1">+{skipSeconds}s</p>
             </button>
-            <button className="ml-3" onClick={() => moveTrack(1)}>
+            <button className="mx-1 h-full flex items-center justify-center" onClick={() => moveTrack(1)}>
               <IoMdSkipForward />
             </button>
           </div>
